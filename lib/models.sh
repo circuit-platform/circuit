@@ -57,6 +57,7 @@ models_start_services() {
 		MODEL_NAME=$model_name
 		DOCKER_IMAGE=circuit/models/${model_name}:latest
 		DB_SOURCE="postgres://admin:admin@${model_name}-db.databases/circuit?sslmode=disable"
+		KAFKA_SOURCE="broker.kafka:9092"
 		eval "cat <<< \"$(cat ${BASE_PATH}/etc/conf/models/service.yaml | sed 's/\"/\\\"/g')\"" > ${SERVICE_YAML}
 
 		kubectl -n ${MODELS_NAMESPACE} apply -f ${SERVICE_YAML}

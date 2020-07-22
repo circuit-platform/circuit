@@ -29,6 +29,8 @@ spec:
             value: "5000"
           - name: DB_SOURCE
             value: "${DB_SOURCE}"
+          - name: KAFKA_SOURCE
+            value: "${KAFKA_SOURCE}"
 ---
 apiVersion: v1
 kind: Service
