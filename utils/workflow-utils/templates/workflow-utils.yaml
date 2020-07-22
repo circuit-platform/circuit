@@ -1,0 +1,71 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: workflow-utils
+spec:
+  templates:
+  - name: selector
+    inputs:
+      parameters:
+        - name: items
+        - name: query_filter
+        - name: filter
+    outputs:
+      artifacts:
+        - name: items
+          path: /tmp/items.json
+    container: 
+      image: circuit/workflow-utils/tasks/selector:latest
+      imagePullPolicy: Never
+      env:
+      - name: ITEMS
+        value: "{{inputs.parameters.items}}"
+      - name: ENRICH_NAMESPACE
+        value: "true"
+      - name: ENRICH_NAMESPACE_SETTINGS
+        value: "true"
+      - name: ENRICH_METADATA
+        value: "true"
+      - name: QUERY_FILTER
+        value: "{{inputs.parameters.query_filter}}"
+      - name: FILTER
+        value: "{{inputs.parameters.filter}}"
+  - name: consumer
+    inputs:
+      parameters:
+        - name: items
+        - name: message
+        - name: filter
+    outputs:
+      artifacts:
+        - name: items
+          path: /tmp/items.json
+    container:
+      image: circuit/workflow-utils/tasks/consumer:latest
+      imagePullPolicy: Never
+      env:
+      - name: ITEMS
+        value: "{{inputs.parameters.items}}"
+      - name: ENRICH_NAMESPACE
+        value: "true"
+      - name: ENRICH_NAMESPACE_SETTINGS
+        value: "true"
+      - name: ENRICH_METADATA
+        value: "true"
+      - name: FILTER
+        value: "{{inputs.parameters.filter}}"
+      - name: EVENT
+        value: "{{workflow.parameters.message}}"
+  - name: committer
+    inputs:
+      parameters:
+      - name: items
+      artifacts:
+      - name: items
+        path: /tmp/items.json       
+    container:
+      image: circuit/workflow-utils/tasks/committer:latest
+      imagePullPolicy: Never
+      env:
+      - name: ITEMS
+        value: "{{inputs.parameters.items}}"

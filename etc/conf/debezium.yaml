@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: connect
+  labels:
+    app: connect
+spec:
+  selector:
+    matchLabels:
+      app: connect
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: connect
+    spec:
+      containers:
+      - name: connect
+        image: "debezium/connect:1.1"
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8083
+        env:
+        - name: CONFIG_STORAGE_TOPIC
+          value: "my_connect_configs"
+        - name: OFFSET_STORAGE_TOPIC
+          value: "my_connect_offsets"
+        - name: STATUS_STORAGE_TOPIC
+          value: "my_connect_statuses"
+        - name: BOOTSTRAP_SERVERS
+          value: "broker.kafka:9092"
+        - name: GROUP_ID
+          value: "1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: connect
+  labels:
+    app: connect
+spec:
+  type: NodePort
+  ports:
+    - port: 8083
+  selector:
+    app: connect

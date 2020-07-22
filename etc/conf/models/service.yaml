@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${MODEL_NAME}
+  labels:
+    app: ${MODEL_NAME}
+spec:
+  selector:
+    matchLabels:
+      app: ${MODEL_NAME}
+      tier: model
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ${MODEL_NAME}
+        tier: model
+    spec:
+      containers:
+      - name: ${MODEL_NAME}
+        image: ${DOCKER_IMAGE}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+        env:
+          - name: SERVICE_HOST
+            value: "0.0.0.0"
+          - name: SERVICE_PORT
+            value: "5000"
+          - name: DB_SOURCE
+            value: "${DB_SOURCE}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${MODEL_NAME}
+  labels:
+    app: ${MODEL_NAME}
+spec:
+  type: NodePort
+  ports:
+    - port: 5000
+  selector:
+    app: ${MODEL_NAME}
+    tier: model

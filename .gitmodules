@@ -1,0 +1,3 @@
+[submodule "models/namespaces"]
+	path = models/namespaces
+	url = https://github.com/circuit-platform/namespaces

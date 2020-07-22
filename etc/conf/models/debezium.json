@@ -1,0 +1,15 @@
+{
+    "name": "${MODEL_NAME}",
+    "config": {
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "tasks.max": "1",
+        "database.hostname": "${MODEL_NAME}-db.${NAMESPACE}",
+        "database.port": "5432",
+        "database.user": "admin",
+        "database.password": "admin",
+        "database.dbname" : "circuit",
+        "database.server.name": "circuit",
+        "schema.whitelist": "public",
+        "database.history.kafka.bootstrap.servers" : "broker.kafka:9092"
+    }
+}

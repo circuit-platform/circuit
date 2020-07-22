@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${MODEL_NAME}-db
+  labels:
+    app: ${MODEL_NAME}-db
+spec:
+  selector:
+    matchLabels:
+      app: ${MODEL_NAME}-db
+      tier: model-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ${MODEL_NAME}-db
+        tier: model-db
+    spec:
+      containers:
+      - name: ${MODEL_NAME}-db
+        image: "debezium/postgres:11"
+        ports:
+        - containerPort: 5432
+        env:
+          - name: POSTGRES_USER
+            value: "admin"
+          - name: POSTGRES_PASSWORD
+            value: "admin"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${MODEL_NAME}-db
+  labels:
+    app: ${MODEL_NAME}-db
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:
+    app: ${MODEL_NAME}-db
+    tier: model-db
