@@ -7,8 +7,8 @@
         "database.port": "5432",
         "database.user": "admin",
         "database.password": "admin",
-        "database.dbname" : "circuit",
-        "database.server.name": "circuit",
+        "database.dbname" : "${MAIN_SPACE}",
+        "database.server.name": "${MAIN_SPACE}",
         "schema.whitelist": "public",
         "database.history.kafka.bootstrap.servers" : "broker.kafka:9092"
     }

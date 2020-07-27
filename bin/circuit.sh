@@ -3,6 +3,8 @@
 set -x
 
 BASE_PATH=$(realpath $(dirname $(realpath $0))/..)
+
+source ${BASE_PATH}/etc/circuit.conf
 for f in ${BASE_PATH}/lib/* ; do source $f; done
 
 start() {
