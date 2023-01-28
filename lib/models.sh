@@ -62,7 +62,8 @@ models_configure_debezium() {
 	for model_name in $(ls ${MODELS_PATH}) ; do
 		MODEL_NAME=$model_name
 		NAMESPACE=$MODELS_DATABASES_NAMESPACE
-		CONNECT_URL=$(minikube -n debezium service --url connect)
+		CONNECT_URL=$(minikube_url debezium connect)
+
 		curl -i -X POST -H "Accept:application/json" -H  "Content-Type:application/json" ${CONNECT_URL}/connectors/ -d @$(file_template ${BASE_PATH}/etc/conf/models/debezium.json)
 	done
 }

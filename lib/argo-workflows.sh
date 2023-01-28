@@ -1,11 +1,11 @@
 #!/bin/bash
 
 ARGO_WORKFLOWS_NAMESPACE="argo"
-ARGO_WORKFLOWS_VERSION="stable"
+ARGO_WORKFLOWS_VERSION="v3.4.4"
 
 argo_workflows_start() {
 	kubectl create namespace ${ARGO_WORKFLOWS_NAMESPACE} 
-	kubectl apply -n ${ARGO_WORKFLOWS_NAMESPACE} -f https://raw.githubusercontent.com/argoproj/argo/${ARGO_WORKFLOWS_VERSION}/manifests/install.yaml
+	kubectl apply -n ${ARGO_WORKFLOWS_NAMESPACE} -f https://github.com/argoproj/argo-workflows/releases/download/${ARGO_WORKFLOWS_VERSION}/install.yaml
 	kubectl patch svc argo-server -n ${ARGO_WORKFLOWS_NAMESPACE} -p '{"spec": {"type": "LoadBalancer"}}'
 
 }
@@ -28,7 +28,9 @@ argo_workflows_config() {
 	cat ${BASE_PATH}/etc/conf/argo-workflows/artifact_repository.yaml >> ${TMP_FILE}
 	kubectl -n ${ARGO_WORKFLOWS_NAMESPACE} apply -f ${TMP_FILE}
 
-	MINIO_URL=$(minikube -n default service --url argo-artifacts)
+	MINIO_URL=$(minikube_url default argo-artifacts)
+
+	echo $MINIO_URL
 
 	aws configure set default.s3.signature_version s3v4
 
