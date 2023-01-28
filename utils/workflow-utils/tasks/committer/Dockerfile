@@ -1,9 +1,9 @@
-FROM alpine:3.12.0
+FROM alpine:3.17.1
 
 RUN apk add \
-		httpie=2.1.0-r0 \
-		bind-tools=9.14.12-r0 \
-		jq=1.6-r1
+		httpie=3.2.1-r1 \
+		bind-tools=9.18.11-r0 \
+		jq=1.6-r2
 
 COPY run.sh /opt/circuit/run.sh
 RUN chmod +x /opt/circuit/run.sh
